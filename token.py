@@ -25,40 +25,36 @@ class Tokenize:
         tokens = []
         buf = ''
 
-        while self.i < len(self.file_str):
-            char = self.file_str[self.i]
+        while self.__peek() != None:
 
-            if char.isalpha():
-                buf += char
-                self.i += 1
-                while self.i < len(self.file_str) and self.file_str[self.i].isalnum():
-                    buf += self.file_str[self.i]
-                    self.i += 1
+            if self.__peek() != None and self.__peek().isalpha():
+                buf += self.__consume()
+                while self.__peek() != None and self.__peek().isalnum():
+                    buf += self.__consume()
                 if buf == 'exit':
                     tokens.append(Token(TokenType._exit, None))
                     buf = ''
                 else:
                     print("Unrecognized token")
                     sys.exit(1)
-            elif char.isdigit():
-                buf += char
-                self.i += 1
-                while self.i < len(self.file_str) and self.file_str[self.i].isdigit():
-                    buf += self.file_str[self.i]
-                    self.i += 1
+
+            elif self.__peek() != None and self.__peek().isdigit():
+                buf += self.__consume()
+                while self.__peek() != None and self.__peek().isdigit():
+                    buf += self.__consume()
                 tokens.append(Token(TokenType.int_lit, buf))
                 buf = ''
-            elif char == '(':
+            elif self.__peek() != None and self.__peek() == '(':
                 tokens.append(Token(TokenType.open_paren, None))
-                self.i += 1
-            elif char == ')':
+                self.__consume()
+            elif self.__peek() != None and self.__peek() == ')':
                 tokens.append(Token(TokenType.open_paren, None))
-                self.i += 1
-            elif char == ';':
+                self.__consume()
+            elif self.__peek() != None and self.__peek() == ';':
                 tokens.append(Token(TokenType.semi, None))
-                self.i += 1
-            elif char == ' ':
-                self.i += 1
+                self.__consume()
+            elif self.__peek() != None and self.__peek() == ' ':
+                self.__consume()
             else:
                 print("Unrecognized token")
                 sys.exit(1)
@@ -66,7 +62,7 @@ class Tokenize:
 
     
     def __peek(self, offset = 0) -> str:
-        if (self.i + offset > len(self.file_str)):
+        if (self.i + offset >= len(self.file_str)):
             return None
         
         return self.file_str[self.i + offset]
