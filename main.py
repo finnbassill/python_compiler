@@ -1,5 +1,6 @@
 import sys
 from token import *
+from generate import *
 
 def main():
 
@@ -23,7 +24,9 @@ def main():
         print(f"Error: {e}")
         sys.exit(1)
 
-    print(tokenize(file_str))
+    tokens = tokenize(file_str)
+    tokens_to_s(tokens, "out.s")
+
 
 
 if __name__ == "__main__":

@@ -16,7 +16,6 @@ class Token:
     def __repr__(self):
         return f"Token({self.token_type}, {self.value})"
 
-
 def tokenize(file_str: str) -> list:
     tokens = []
     buf = ''
@@ -47,7 +46,6 @@ def tokenize(file_str: str) -> list:
             tokens.append(Token(TokenType.semi, None))
             i += 1
         elif file_str[i] == ' ':
-            tokens.append(Token(TokenType.semi, None))
             i += 1
         else:
             print("Unrecognized token")
