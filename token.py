@@ -75,3 +75,4 @@ class Tokenize:
         temp_char = self.file_str[self.i]
         self.i += 1
         return temp_char
+        
