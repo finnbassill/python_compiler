@@ -24,7 +24,10 @@ def main():
         print(f"Error: {e}")
         sys.exit(1)
 
-    tokens = tokenize(file_str)
+    t = Tokenize(file_str)
+
+    tokens = t.tokenize()
+    print(tokens)
     tokens_to_s(tokens, "out.s")
 
 

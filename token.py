@@ -16,38 +16,62 @@ class Token:
     def __repr__(self):
         return f"Token({self.token_type}, {self.value})"
 
-def tokenize(file_str: str) -> list:
-    tokens = []
-    buf = ''
+class Tokenize:
+    def __init__(self, file_str: str):
+        self.i = 0
+        self.file_str = file_str
 
-    i = 0
-    while i < len(file_str):
-        if file_str[i].isalpha():
-            buf += file_str[i]
-            i += 1
-            while file_str[i].isalnum():
-                buf += file_str[i]
-                i += 1  
-            if buf == 'exit':
-                tokens.append(Token(TokenType._exit, None))
+    def tokenize(self) -> list:
+        tokens = []
+        buf = ''
+
+        while self.i < len(self.file_str):
+            char = self.file_str[self.i]
+
+            if char.isalpha():
+                buf += char
+                self.i += 1
+                while self.i < len(self.file_str) and self.file_str[self.i].isalnum():
+                    buf += self.file_str[self.i]
+                    self.i += 1
+                if buf == 'exit':
+                    tokens.append(Token(TokenType._exit, None))
+                    buf = ''
+                else:
+                    print("Unrecognized token")
+                    sys.exit(1)
+            elif char.isdigit():
+                buf += char
+                self.i += 1
+                while self.i < len(self.file_str) and self.file_str[self.i].isdigit():
+                    buf += self.file_str[self.i]
+                    self.i += 1
+                tokens.append(Token(TokenType.int_lit, buf))
                 buf = ''
+            elif char == '(':
+                tokens.append(Token(TokenType.open_paren, None))
+                self.i += 1
+            elif char == ')':
+                tokens.append(Token(TokenType.open_paren, None))
+                self.i += 1
+            elif char == ';':
+                tokens.append(Token(TokenType.semi, None))
+                self.i += 1
+            elif char == ' ':
+                self.i += 1
             else:
                 print("Unrecognized token")
                 sys.exit(1)
-        elif file_str[i].isdigit():
-            buf += file_str[i]
-            i += 1
-            while file_str[i].isdigit():
-                buf += file_str[i]
-                i += 1
-            tokens.append(Token(TokenType.int_lit, buf))
-            buf = ''
-        elif file_str[i] == ';':
-            tokens.append(Token(TokenType.semi, None))
-            i += 1
-        elif file_str[i] == ' ':
-            i += 1
-        else:
-            print("Unrecognized token")
-            sys.exit(1)
-    return tokens
+        return tokens
+
+    
+    def __peek(self, offset = 0) -> str:
+        if (self.i + offset > len(self.file_str)):
+            return None
+        
+        return self.file_str[self.i + offset]
+
+    def __consume(self) -> str:
+        temp_char = self.file_str[self.i]
+        self.i += 1
+        return temp_char
