@@ -48,7 +48,7 @@ class Tokenize:
                 tokens.append(Token(TokenType.open_paren, None))
                 self.__consume()
             elif self.__peek() != None and self.__peek() == ')':
-                tokens.append(Token(TokenType.open_paren, None))
+                tokens.append(Token(TokenType.closed_paren, None))
                 self.__consume()
             elif self.__peek() != None and self.__peek() == ';':
                 tokens.append(Token(TokenType.semi, None))

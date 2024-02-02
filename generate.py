@@ -13,14 +13,45 @@ class Generate():
 
         while self.__peek() != None:
             if self.__peek() != None and self.__peek().token_type == TokenType._exit:
-                if self.__peek(1) != None and self.__peek(1).token_type == TokenType.int_lit:
-                    if self.__peek(2) != None and self.__peek(2).token_type == TokenType.semi:
-                        self.__consume()
-                        asm_str += "    mov $60, %rax\n"
-                        asm_str += f"    mov ${self.__consume().value}, %rdi\n"
-                        asm_str += "    syscall\n"
-                        self.__consume()
-        try:
+                if self.__peek(1) != None and self.__peek(1).token_type == TokenType.open_paren and self.__peek(2).token_type != TokenType.closed_paren:
+                    if self.__peek(2) != None and self.__peek(2).token_type == TokenType.int_lit:
+                        if self.__peek(3) != None and self.__peek(3).token_type == TokenType.closed_paren:
+                            if self.__peek(4) != None and self.__peek(4).token_type == TokenType.semi:
+                                self.__consume()
+                                self.__consume()
+                                asm_str += "    mov $60, %rax\n"
+                                asm_str += f"    mov ${self.__consume().value}, %rdi\n"
+                                asm_str += "    syscall\n"
+                                self.__consume()
+                                self.__consume()
+                            else:
+                                print("Error: Missing ';'")
+                                sys.exit(1)
+                        else:
+                            print("Error: Missing ')'")
+                            sys.exit(1)
+                    else:
+                        print("Error: exit arg non-int")
+                        sys.exit(1)
+                elif self.__peek(3) != None and self.__peek(3).token_type == TokenType.semi:
+                    self.__consume()
+                    self.__consume()
+                    self.__consume()
+                    self.__consume()
+                    asm_str += "    mov $60, %rax\n"
+                    asm_str += f"    mov ${0}, %rdi\n"
+                    asm_str += "    syscall\n"
+                else:
+                    print("Error: Missing ';'")
+                    sys.exit(1)
+            else:
+                print("Error: Unrecognized Token")
+                sys.exit(1)        
+
+
+
+
+        try:            
             with open(self.output_file, 'w') as file:
                 file.write(asm_str)
         except FileNotFoundError:

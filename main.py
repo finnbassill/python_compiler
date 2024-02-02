@@ -28,6 +28,7 @@ def main():
     tokens = t.tokenize()
     g = Generate(tokens, "out.s")
     g.tokens_to_s()
+    
 
 
 
