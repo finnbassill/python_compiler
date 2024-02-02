@@ -25,10 +25,9 @@ def main():
         sys.exit(1)
 
     t = Tokenize(file_str)
-
     tokens = t.tokenize()
-    print(tokens)
-    tokens_to_s(tokens, "out.s")
+    g = Generate(tokens, "out.s")
+    g.tokens_to_s()
 
 
 
