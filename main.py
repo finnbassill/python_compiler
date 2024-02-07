@@ -8,7 +8,7 @@ def main():
     if len(sys.argv) != 2:
         print('Incorrect num commandline args: ' + str(len(sys.argv)))
         sys.exit(1)
-    elif '.pc' not in sys.argv[1]:
+    elif '.txt' not in sys.argv[1]:
         print('Incorrect file input')
         sys.exit(1)
 

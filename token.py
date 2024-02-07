@@ -21,7 +21,7 @@ class Tokenize:
         self.i = 0
         self.file_str = file_str
 
-    def tokenize(self) -> list:
+    def tokenize(self) -> list[Token]:
         tokens = []
         buf = ''
 
