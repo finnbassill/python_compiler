@@ -1,53 +1,18 @@
 from token import *
+from node import *
 
-class Generate():
+class Generate:
 
-    def __init__(self, tokens: list, output_file: str):
-        self.tokens = tokens
+    def __init__(self, root: Node, output_file: str):
+        self.root = root
         self.output_file = output_file
-        self.i = 0
 
     def tokens_to_s(self):
-
         asm_str = ".global _start\n\n_start:\n"
 
-        while self.__peek() != None:
-            if self.__peek() != None and self.__peek().token_type == TokenType._exit:
-                if self.__peek(1) != None and self.__peek(1).token_type == TokenType.open_paren and self.__peek(2).token_type != TokenType.closed_paren:
-                    if self.__peek(2) != None and self.__peek(2).token_type == TokenType.int_lit:
-                        if self.__peek(3) != None and self.__peek(3).token_type == TokenType.closed_paren:
-                            if self.__peek(4) != None and self.__peek(4).token_type == TokenType.semi:
-                                self.__consume()
-                                self.__consume()
-                                asm_str += "    mov $60, %rax\n"
-                                asm_str += f"    mov ${self.__consume().value}, %rdi\n"
-                                asm_str += "    syscall\n"
-                                self.__consume()
-                                self.__consume()
-                            else:
-                                print("Error: Missing ';'")
-                                sys.exit(1)
-                        else:
-                            print("Error: Missing ')'")
-                            sys.exit(1)
-                    else:
-                        print("Error: exit arg non-int")
-                        sys.exit(1)
-                elif self.__peek(3) != None and self.__peek(3).token_type == TokenType.semi:
-                    self.__consume()
-                    self.__consume()
-                    self.__consume()
-                    self.__consume()
-                    asm_str += "    mov $60, %rax\n"
-                    asm_str += f"    mov ${0}, %rdi\n"
-                    asm_str += "    syscall\n"
-                else:
-                    print("Error: Missing ';'")
-                    sys.exit(1)
-            else:
-                print("Error: Unrecognized Token")
-                sys.exit(1)        
-
+        asm_str += "    mov $60, %rax\n"
+        asm_str += f"    mov ${self.root.get_data().get_data().value}, %rdi\n"
+        asm_str += "    syscall\n"
 
 
 
@@ -60,14 +25,3 @@ class Generate():
         except Exception as e:
             print(f"Error: {e}")
             sys.exit(1)
-
-    def __peek(self, offset = 0) -> str:
-        if (self.i + offset >= len(self.tokens)):
-            return None
-        
-        return self.tokens[self.i + offset]
-
-    def __consume(self) -> str:
-        temp_char = self.tokens[self.i]
-        self.i += 1
-        return temp_char

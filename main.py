@@ -1,5 +1,6 @@
 import sys
 from token import *
+from parse import *
 from generate import *
 
 def main():
@@ -26,7 +27,9 @@ def main():
 
     t = Tokenize(file_str)
     tokens = t.tokenize()
-    g = Generate(tokens, "out.s")
+    p = Parse(tokens)
+    root = p.parse()
+    g = Generate(root, "out.s")
     g.tokens_to_s()
     
 
