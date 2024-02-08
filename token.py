@@ -7,6 +7,7 @@ class TokenType(Enum):
     open_paren = "OPEN_PAREN"
     closed_paren = "CLOSED_PAREN"
     semi = "SEMI_COLON"
+    ident = "IDENT"
 
 class Token:
     def __init__(self, token_type: TokenType, value: any):

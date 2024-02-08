@@ -1,22 +1,37 @@
+from typing import Union
+from token import *
+
 class Node:
     def __init__(self, data):
         self.data = data
-    
-    def append_data(self, data):
-        self.data.append(data)
 
-    # Method to set data of the node
-    def set_data(self, data):
-        self.data = data
+class Node_Expr_Int_Lit(Node):
+    def __init__(self, int_lit: Token):
+        self.int_lit = int_lit
 
-    # Method to get data of the node
-    def get_data(self):
-        return self.data
-
-class Node_Exit(Node):
-    def __init__(self, data):
-        super().__init__(data)
+class Node_Expr_Ident(Node):
+    def __init__(self, ident: Token):
+        self.ident = ident
 
 class Node_Expr(Node):
-    def __init__(self, data):
-        super().__init__(data)
+    def __init__(self, node: Union[Node_Expr_Ident, Node_Expr_Int_Lit]):
+        self.node = node
+
+class Node_Stmt_Exit(Node):
+    def __init__(self, expr: Node_Expr):
+        self.expr = expr
+
+class Node_Stmt_Let(Node):
+    def __init__(self, expr: Node_Expr, ident: Token):
+        self.expr = expr
+        self.ident = ident
+
+class Node_Stmt(Node):
+    def __init__(self, node: Union[Node_Stmt_Exit, Node_Stmt_Let]):
+        self.node = node
+
+class Node_Prog(Node):
+    def __init__(self):
+        self.stmts = []
+    def add_stmt(self, stmt: Node_Stmt):
+        self.stmts.append(stmt)

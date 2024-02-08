@@ -28,12 +28,10 @@ def main():
     t = Tokenize(file_str)
     tokens = t.tokenize()
     p = Parse(tokens)
-    root = p.parse()
-    g = Generate(root, "out.s")
-    g.tokens_to_s()
+    prog = p.parse_prog()
+    g = Generate(prog, "out.s")
+    g.gen_prog()
     
-
-
 
 if __name__ == "__main__":
     main()

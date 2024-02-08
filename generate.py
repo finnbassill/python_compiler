@@ -3,22 +3,44 @@ from node import *
 
 class Generate:
 
-    def __init__(self, root: Node, output_file: str):
-        self.root = root
+    def __init__(self, prog: Node_Prog, output_file: str):
+        self.prog = prog
         self.output_file = output_file
+        self.output = ".global _start\n\n_start:\n"
 
-    def tokens_to_s(self):
-        asm_str = ".global _start\n\n_start:\n"
+    def gen_expr(self, expr: Node_Expr):
+        if isinstance(expr.node, Node_Expr_Int_Lit):
+            self.output += f"    mov ${expr.node.int_lit.value}, %rax\n"
+            self.output += "    push %rax\n"
+        else:
+            pass
 
-        asm_str += "    mov $60, %rax\n"
-        asm_str += f"    mov ${self.root.get_data().get_data().value}, %rdi\n"
-        asm_str += "    syscall\n"
+    def gen_stmt(self, stmt: Node_Stmt):
+        if isinstance(stmt.node, Node_Stmt_Exit):
+            self.gen_expr(stmt.node.expr)
+
+            self.output += "    mov $60, %rax\n"
+            self.output += "    pop %rdi \n"
+            self.output += "    syscall\n"
+        else:
+            pass
+
+    def gen_prog(self): 
+        for stmt in self.prog.stmts:
+            self.gen_stmt(stmt)
+
+
+
+
+        self.output += "    mov $60, %rax\n"
+        self.output += "    mov $0, %rdi\n"
+        self.output += "    syscall\n"
 
 
 
         try:            
             with open(self.output_file, 'w') as file:
-                file.write(asm_str)
+                file.write(self.output)
         except FileNotFoundError:
             print("File '" + sys.argv[1] + "' not found")
             sys.exit(1)
